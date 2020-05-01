@@ -1,7 +1,7 @@
 {
-  "name": "Su_bot",
+  "name": "twitter-bots-su_bot_by7",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "license": "MIT",
   "dependencies": {
     "cron": "1.7.0",
@@ -9,4 +9,5 @@
   },
   "engines": {
     "node": "~10"
+  }
 }
