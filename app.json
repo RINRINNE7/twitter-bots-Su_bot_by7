@@ -1,0 +1,8 @@
+{
+  "name": "twitter-bots-Su_bot_by7",
+  "description": "Twitterボット",
+  "repository": "https://github.com/progedu/RINRINNE7/twitter-bots-Su_bot_by7",
+  "logo": "",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}
