@@ -25,7 +25,7 @@ function getHomeTimeLine() {
 
     const newTweets = [];
     tweets.forEach(function(homeTimeLineTweet, key) {
-      if (isCheckedTweet(homeTimeLineTweet) === false && isStream(homeTimeLineTweet) === false) {
+      if (isCheckedTweet(homeTimeLineTweet) === false) {
         responseHomeTimeLine(homeTimeLineTweet);
         newTweets.push(homeTimeLineTweet); // 新しいツイートを追加
       }
@@ -39,7 +39,7 @@ function getHomeTimeLine() {
 
 function isCheckedTweet(homeTimeLineTweet) {
   // ボット自身のツイートは無視する。
-  if (homeTimeLineTweet.user.screen_name === 'Su') {
+  if (homeTimeLineTweet.user.screen_name === 'Su_bot_by7') {
     return true;
   }
 
@@ -53,25 +53,32 @@ function isCheckedTweet(homeTimeLineTweet) {
   return false;
 }
 
-function isStream(homeTimeLineTweet) {
-  //@Su_bot_by7を含むかどうか
-  const str = `${homeTimeLineTweet.text}`;
-  const judge = /\@Su_bot_by7/.test(str);
-  return judge;
-}
-
-const responses = ['面白い！', 'すごい！', 'なるほど！'];
+const responses = ['面白い！', 'すごい！', 'なるほど！','ふーん？', 'へぇ？'];
+const lots = ['大吉', '吉', '中吉', '末吉', '凶'];
 
 function responseHomeTimeLine(homeTimeLineTweet) {
-  const tweetMessage = '@' + homeTimeLineTweet.user.screen_name + '「' + homeTimeLineTweet.text + '」 ' + responses[Math.floor(Math.random() * responses.length)];
-  twitter.post('statuses/update', {
-    status: tweetMessage,
-    in_reply_to_status_id: homeTimeLineTweet.id_str
-  }).then((tweet) => {
-    console.log(tweet);
-  }).catch((error) => {
-    throw error;
-  });
+  const text = `${homeTimeLineTweet.text}`
+  if (text === 'おみくじ')　{
+    const tweetMessage = '@' + homeTimeLineTweet.user.screen_name + lots[Math.floor(Math.random() * responses.length)];
+    twitter.post('statuses/update', {
+      status: tweetMessage,
+      in_reply_to_status_id: homeTimeLineTweet.id_str
+    }).then((tweet) => {
+      console.log(tweet);
+    }).catch((error) => {
+      throw error;
+    });
+  } else {
+    const tweetMessage = '@' + homeTimeLineTweet.user.screen_name + '「' + homeTimeLineTweet.text + '」 ' + responses[Math.floor(Math.random() * responses.length)];
+    twitter.post('statuses/update', {
+      status: tweetMessage,
+      in_reply_to_status_id: homeTimeLineTweet.id_str
+    }).then((tweet) => {
+      console.log(tweet);
+    }).catch((error) => {
+      throw error;
+    });
+  }
 }
 
 const cronJob = new cron({
@@ -82,24 +89,3 @@ const cronJob = new cron({
   }
 });
 getHomeTimeLine();
-
-const stream = twitter.stream('statuses/filter', { track: '@Su_bot_by7' });
-stream.on('tweet', function(tweet) {
-  console.log(tweet.text);
-    
-  const tweetMessage = '@' + tweet.user.screen_name + ' 呼んだ？?　(*´ω｀*)';
-  twitter.post('statuses/update', {
-    status: tweetMessage,
-    in_reply_to_status_id: tweet.id_str
-  })
-  .then((tweet) => {
-    console.log(tweet);
-  })
-  .catch((error) => {
-    throw error;
-  });
-});
-
-stream.on('error', function(error) {
-  throw error;
-});
